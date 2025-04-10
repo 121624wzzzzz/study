@@ -1,162 +1,218 @@
-以下是整理好的命令块，每个命令块后都有注释说明其作用，使用 Markdown 格式呈现：
+以下是对 Linux 常用命令的详细解析，包含使用场景、参数说明和实用技巧：
 
 ---
 
-### **1. `pipreqs` 命令**
+### 一、文件和目录操作（核心命令）
+
+#### 1. `ls` - 列出目录内容
 ```bash
-# 安装 pipreqs
-pip install pipreqs
+ls          # 简单列表
+ls -l       # 详细列表（显示权限/所有者/大小/时间）
+ls -a       # 显示隐藏文件（以.开头的文件）
+ls -lh      # 人类可读的文件大小（KB/MB/GB）
+ls -lt      # 按修改时间排序（最新在前）
+ls -R       # 递归列出子目录内容
+```
 
-# 在项目根目录下生成 requirements.txt
-pipreqs ./
+#### 2. `cd` - 切换目录
+```bash
+cd /path/to/dir  # 绝对路径切换
+cd ..            # 返回上级目录
+cd ~             # 返回用户主目录
+cd -             # 返回上一个工作目录
+```
 
-# 强制覆盖现有的 requirements.txt 文件
-pipreqs ./ --force
+#### 3. `mkdir` - 创建目录
+```bash
+mkdir dirname              # 创建单个目录
+mkdir -p parent/child      # 创建多级目录（自动创建父目录）
+mkdir {dir1,dir2,dir3}     # 批量创建目录
+```
 
-# 忽略某些目录（例如 venv 和 tests）
-pipreqs ./ --ignore=venv,tests
+#### 4. `rm` - 删除文件/目录
+```bash
+rm file.txt                # 删除文件
+rm -i file.txt             # 交互式删除（确认提示）
+rm -r dirname              # 递归删除目录
+rm -rf dirname             # 强制删除（无确认，慎用！）
+```
 
-# 生成不带版本的依赖列表
-pipreqs ./ --no-pin
-
-# 指定编码（例如 utf-8）
-pipreqs ./ --encoding=utf-8
+#### 5. `cp/mv` - 复制/移动文件
+```bash
+cp file.txt /backup/       # 复制文件
+cp -r dir /backup/         # 递归复制目录
+mv file.txt newname.txt    # 重命名
+mv file.txt /target/       # 移动文件
 ```
 
 ---
 
-### **2. Git 连接 GitHub 命令**
+### 二、文件查看与编辑
+
+#### 1. 查看文件内容
 ```bash
-# 安装 Git（Linux）
-sudo apt-get install git
+cat file.txt        # 显示全部内容
+less file.txt       # 分页查看（支持搜索：/keyword）
+head -n 20 file.txt # 显示前20行
+tail -f log.txt     # 实时追踪日志文件
+```
 
-# 安装 Git（macOS，使用 Homebrew）
-brew install git
+#### 2. 文件编辑
+```bash
+nano file.txt       # 简单文本编辑器（Ctrl+O保存，Ctrl+X退出）
+vim file.txt        # 高级编辑器（需掌握基本命令）
+```
 
-# 配置 Git 用户名
-git config --global user.name "Your Name"
-
-# 配置 Git 邮箱
-git config --global user.email "your.email@example.com"
-
-# 生成 SSH 密钥
-ssh-keygen -t rsa -b 4096 -C "your.email@example.com"
-
-# 将 SSH 密钥添加到 SSH 代理
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_rsa
-
-# 复制 SSH 公钥（添加到 GitHub）
-cat ~/.ssh/id_rsa.pub
-
-# 克隆仓库（使用 HTTPS）
-git clone https://github.com/username/repository.git
-
-# 克隆仓库（使用 SSH）
-git clone git@github.com:username/repository.git
-
-# 查看 Git 状态
-git status
-
-# 添加文件到暂存区
-git add filename
-
-# 添加所有文件到暂存区
-git add .
-
-# 提交更改
-git commit -m "Your commit message"
-
-# 推送更改到远程仓库
-git push origin branch-name
-
-# 拉取远程仓库的更改
-git pull origin branch-name
-
-# 创建新分支
-git branch new-branch
-
-# 切换分支
-git checkout branch-name
-
-# 合并分支
-git merge branch-name
+#### 3. 文件属性
+```bash
+stat file.txt       # 显示详细属性（大小/权限/时间戳）
+file unknown.bin    # 检测文件类型
 ```
 
 ---
 
-### **3. 下载和安装依赖的命令**
+### 三、系统监控与管理
+
+#### 1. 进程管理
 ```bash
-# 使用 pip 安装 requirements.txt 中的依赖
-pip install -r requirements.txt
+top                 # 动态进程监控（按q退出）
+htop                # 增强版top（需安装）
+ps aux | grep nginx # 查找特定进程
+kill -9 PID         # 强制终止进程
+pkill -f "pattern"  # 按名称终止进程
+```
 
-# 下载依赖包到本地目录（不安装）
-pip download -r requirements.txt
+#### 2. 磁盘与内存
+```bash
+df -h               # 查看磁盘使用情况（人类可读）
+du -sh *            # 统计当前目录各文件/目录大小
+free -h             # 查看内存使用情况
+```
 
-# 下载并构建依赖包为 .whl 文件
-pip wheel -r requirements.txt
-
-# 离线安装本地目录中的依赖包
-pip install --no-index --find-links=. -r requirements.txt
+#### 3. 系统信息
+```bash
+uname -a            # 显示系统内核信息
+uptime              # 系统运行时间与负载
+lscpu               # CPU详细信息
+lsblk               # 块设备信息（磁盘分区）
 ```
 
 ---
 
-### **4. Conda 相关命令**
+### 四、网络操作
+
+#### 1. 网络诊断
 ```bash
-# 创建新的 Conda 环境
-conda create --name myenv python=3.x
+ping google.com      # 测试网络连通性
+traceroute google.com # 追踪网络路径
+netstat -tulnp      # 查看开放端口
+ss -tulnp           # 更现代的netstat替代
+```
 
-# 激活 Conda 环境
-conda activate myenv
-
-# 导出 Conda 环境配置
-conda env export > environment.yml
-
-# 从 environment.yml 创建环境
-conda env create -f environment.yml
-
-# 清理 Conda 缓存
-conda clean --all
+#### 2. 远程操作
+```bash
+ssh user@host -p 2222  # 指定端口连接
+scp file.txt user@host:/path  # 安全复制文件
+rsync -avz dir/ user@host:backup/ # 增量同步
 ```
 
 ---
 
-### **5. Poetry 相关命令**
+### 五、权限管理
+
+#### 1. 权限修改
 ```bash
-# 安装 Poetry
-pip install poetry
+chmod 755 script.sh  # 设置权限（所有者rwx，其他rx）
+chmod +x script.sh   # 添加执行权限
+chown user:group file.txt # 修改所有者/组
+```
 
-# 初始化 Poetry 项目
-poetry init
-
-# 添加依赖
-poetry add package_name
-
-# 安装依赖
-poetry install
-
-# 导出 requirements.txt
-poetry export -f requirements.txt --output requirements.txt
+#### 2. 特殊权限
+```bash
+sudo command         # 以root权限执行
+sudo su -            # 切换root用户（需谨慎）
+visudo               # 安全编辑sudo配置
 ```
 
 ---
 
-### **6. Pipenv 相关命令**
+### 六、压缩与归档
+
+#### 1. 常用压缩
 ```bash
-# 安装 Pipenv
-pip install pipenv
+tar -czvf archive.tar.gz dir/  # 创建gzip压缩包
+tar -xzvf archive.tar.gz       # 解压gzip包
+zip -r archive.zip dir/        # 创建zip压缩包
+unzip archive.zip              # 解压zip包
+```
 
-# 初始化 Pipenv 项目
-pipenv install
-
-# 添加依赖
-pipenv install package_name
-
-# 生成 requirements.txt
-pipenv lock -r > requirements.txt
+#### 2. 高级用法
+```bash
+tar -cjvf archive.tar.bz2 dir/  # 使用bzip2压缩
+pigz -k file.tar               # 多线程压缩（需安装）
 ```
 
 ---
 
-###
+### 七、查找与过滤
+
+#### 1. 文件查找
+```bash
+find / -name "*.log" -mtime +30 # 查找30天前的日志
+find . -size +100M             # 查找大于100MB的文件
+```
+
+#### 2. 内容搜索
+```bash
+grep "error" *.log             # 在当前目录日志中搜索
+grep -r "pattern" /path/       # 递归搜索目录
+ack -i "keyword"               # 更友好的grep替代（需安装）
+```
+
+#### 3. 组合使用
+```bash
+ls -l | grep "Aug"             # 过滤8月修改的文件
+ps aux | sort -nk4 | tail -5   # 显示内存使用最高的5个进程
+```
+
+---
+
+### 八、实用技巧
+
+#### 1. 命令组合
+```bash
+command1 && command2      # 前一个成功才执行后一个
+command1 || command2      # 前一个失败才执行后一个
+command1 ; command2       # 顺序执行
+```
+
+#### 2. 历史命令
+```bash
+history | grep "apt"      # 搜索历史命令
+!42                       # 执行历史记录中第42条命令
+Ctrl+R                    # 反向搜索历史命令
+```
+
+#### 3. 输出重定向
+```bash
+command > output.txt      # 标准输出重定向（覆盖）
+command >> output.txt     # 追加输出
+command 2> error.log      # 错误输出重定向
+command &> all.log        # 所有输出重定向
+```
+
+---
+
+### 九、危险命令警示 ⚠️
+```bash
+rm -rf /                 # 强制删除根目录（系统毁灭！）
+dd if=/dev/zero of=/dev/sda # 清空整个磁盘
+:(){ :|:& };:            # fork炸弹（会导致系统崩溃）
+```
+
+> **最佳实践建议**：
+> 1. 使用`-i`参数进行危险操作前确认
+> 2. 重要文件先备份再操作
+> 3. 生产环境慎用`sudo`和通配符（如`rm *`）
+
+掌握这些命令后，您将能高效完成90%的Linux系统操作任务。建议在实际操作前，先在不重要的文件或测试环境中练习。
