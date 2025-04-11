@@ -307,7 +307,7 @@ ssh-keygen -t rsa -b 4096 -C "your@email.com"
 ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519
 eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa #&&如果前一条命令成功（返回 0）
 #则执行下一条/默认私钥（id_rsa）添加到 SSH 代理，后续无需重复输入密码
-cat ~/.ssh/id_rsa.pub | clip  # Windows复制公钥,|管道，clip复制
+cat ~/.ssh/id_rsa.pub | clip  # Windows复制公钥,|管道接受前一条输出，clip复制
 # 将公钥添加到GitHub/GitLab的SSH Keys设置中
 
 # ====================== 项目初始化 ======================
@@ -328,10 +328,10 @@ git add .gitattributes && git commit -m "chore: 配置LFS规则"
 
 # ====================== 分支管理 ======================
 # 1. 创建功能分支（带分类文件夹）
-git checkout -b feat/user-auth  # 功能开发
+git checkout -b feat/a  # 功能开发
 git checkout -b fix/login-error # Bug修复
 git checkout -b docs/api-update # 文档更新
-
+git push -u origin feat/a
 # 2. 查看分支信息
 git branch -avv  # 查看本地+远程分支及关联关系
 git log --oneline --graph --all  # 图形化查看提交历史
