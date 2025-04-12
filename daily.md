@@ -397,6 +397,8 @@ git push origin --delete feat/payment
   git stash pop  # 恢复最近暂存
   ```
 
+[Git 核心指令分类](./temp.md)
+
 ##### 配置***gitgnore***文件
 
 | 符号 | 作用           | 示例          | 说明                      |
