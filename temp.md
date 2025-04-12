@@ -1,53 +1,155 @@
-以下是完善后的 **Git 分支命名规范表格**，补充了更多常见的分支类型和使用场景，并优化了格式：
+# Git 核心指令分类
+
+<!-- markdownlint-disable MD033 -->
+> 本文档整理了常用的 Git 操作命令，按照数据流向与功能分类，方便快速查找与使用。
+
+## 一、工作区与暂存区操作
+
+### 1. 添加文件 (`git add`)
+
+| 命令 | 方向 | 作用 | 场景示例 |
+|------|------|------|----------|
+| `git add <file>` | 正向 | 添加文件到暂存区 | `git add README.md` |
+| `git add -p` | 正向 | 交互式选择代码块暂存 | 只提交部分修改 |
+| `git add .` | 正向 | 添加当前目录所有变更 | 提交所有更改 |
+
+### 2. 撤销操作
+
+| 命令 | 方向 | 作用 | 场景示例 |
+|------|------|------|----------|
+| `git restore --staged <file>` | 反向 | **从暂存区撤出**（不删除工作区文件） | `git restore --staged config.yml` |
+| `git rm --cached <file>` | 反向 | 从暂存区删除并**停止跟踪**（保留工作区文件） | `git rm --cached .env.local` |
+| `git restore <file>` | 反向 | 丢弃工作区修改 | `git restore src/main.js` |
+
+## 二、本地仓库操作
+
+### 1. 提交更改 (`git commit`)
+
+| 命令 | 方向 | 作用 | 场景示例 |
+|------|------|------|----------|
+| `git commit -m "msg"` | 正向 | 提交到本地仓库 | `git commit -m "feat: add login"` |
+| `git commit -a -m "msg"` | 正向 | **跳过暂存**，直接提交所有已跟踪文件 | `git commit -am "fix: typo"` |
+| `git commit --amend` | 正向 | 修改最近一次提交 | 补漏文件或改提交消息 |
+
+### 2. 撤销提交
+
+| 命令 | 方向 | 作用 | 场景示例 |
+|------|------|------|----------|
+| `git revert <commit>` | 反向 | **撤销指定提交**（生成反向提交，保留历史） | `git revert abc123` |
+| `git reset --soft HEAD~1` | 反向 | 撤销提交但保留修改到暂存区 | 重写提交消息或拆分提交 |
+| `git reset --hard HEAD~1` | 反向 | **彻底删除提交**（慎用！丢失修改） | 放弃最近一次提交的所有改动 |
+
+## 三、分支管理
+
+### 1. 分支基本操作
+
+| 命令 | 方向 | 作用 | 场景示例 |
+|------|------|------|----------|
+| `git branch` | 查看 | 查看本地分支 | `git branch` |
+| `git checkout -b <branch>` | 正向 | 创建并切换分支 | `git checkout -b feat/login` |
+| `git switch -c <branch>` | 正向 | 创建并切换分支（新语法） | `git switch -c fix/header` |
+| `git branch -d <branch>` | 反向 | 安全删除已合并分支 | `git branch -d old-feature` |
+
+### 2. 分支合并
+
+| 命令 | 方向 | 作用 | 场景示例 |
+|------|------|------|----------|
+| `git merge <branch>` | 正向 | **合并分支**到当前分支 | `git merge feat/search` |
+| `git rebase <branch>` | 正向 | **变基分支**（重写提交历史） | `git rebase main` |
+| `git cherry-pick <commit>` | 正向 | **复制提交**到当前分支 | `git cherry-pick abc123` |
+| `git merge --abort` | 反向 | **中止合并操作** | 解决冲突时放弃操作 |
+| `git rebase --abort` | 反向 | **中止变基操作** | 变基遇到问题时中止 |
+
+## 四、远程仓库交互
+
+### 1. 推送与拉取
+
+| 命令 | 方向 | 作用 | 场景示例 |
+|------|------|------|----------|
+| `git push -u origin <branch>` | 正向 | 首次推送并关联分支 | `git push -u origin feat/chat` |
+| `git push` | 正向 | 推送当前分支到远程 | `git push` |
+| `git pull` | 正向 | **拉取并合并远程更新** | `git pull origin main` |
+| `git fetch` | 正向 | 仅下载远程更新（不合并） | `git fetch` |
+
+### 2. 远程分支管理
+
+| 命令 | 方向 | 作用 | 场景示例 |
+|------|------|------|----------|
+| `git push --force-with-lease` | 反向 | 安全强制推送（覆盖远程提交） | `git push --force-with-lease` |
+| `git push origin --delete <branch>` | 反向 | 删除远程分支 | `git push origin --delete old-branch` |
+| `git branch -r` | 查看 | 查看远程分支 | `git branch -r` |
+
+## 五、临时操作与代码恢复
+
+### 1. 工作区暂存
+
+| 命令 | 方向 | 作用 | 场景示例 |
+|------|------|------|----------|
+| `git stash` | 正向 | **临时保存未提交的修改** | `git stash` |
+| `git stash save "WIP"` | 正向 | 临时保存并添加描述 | `git stash save "登录页面开发中"` |
+| `git stash pop` | 正向 | 恢复最近一次暂存修改 | `git stash pop` |
+| `git stash list` | 查看 | 查看所有暂存记录 | `git stash list` |
+| `git stash drop` | 反向 | 删除指定暂存记录 | `git stash drop stash@{0}` |
+
+### 2. 代码恢复
+
+| 命令 | 方向 | 作用 | 场景示例 |
+|------|------|------|----------|
+| `git checkout HEAD~1 <file>` | 反向 | 从历史提交恢复文件 | `git checkout HEAD~1 src/styles.css` |
+| `git reflog` | 查看 | 查看引用日志（可用于恢复删除的分支） | `git reflog` |
+
+## 六、常见工作流程示例
+
+### 1. 功能开发流程
+
+```bash
+# 1. 开发新功能（正向）
+git checkout -b feat/search
+git add -p  # 选择暂存
+git commit -m "feat: add search UI"
+git push -u origin feat/search
+
+# 2. 创建合并请求(PR)并完成代码审查
+# (在GitHub/GitLab等平台操作)
+
+# 3. 合并完成后清理分支
+git checkout main
+git pull  # 获取最新主分支
+git branch -d feat/search  # 删除本地分支
+git push origin --delete feat/search  # 删除远程分支
+```
+
+### 2. 紧急修复流程
+
+```bash
+# 1. 暂存当前工作
+git stash save "保存搜索功能开发进度"
+
+# 2. 创建修复分支
+git checkout main
+git pull
+git checkout -b hotfix/login
+
+# 3. 修复、提交并推送
+git commit -am "fix: login error"
+git push -u origin hotfix/login
+
+# 4. 创建PR并合并修复
+
+# 5. 恢复之前的开发
+git checkout feat/search
+git stash pop  # 恢复暂存的代码
+```
+
+## 七、反向操作速查表
+
+| 想撤销的操作 | 对应命令 | 危险等级 |
+|--------------|----------|----------|
+| **误暂存文件** | `git restore --staged <file>` | ⭐️ |
+| **误提交（需修改）** | `git reset --soft HEAD~1` | ⭐️ |
+| **误提交（需彻底删除）** | `git reset --hard HEAD~1` | ⭐️⭐️⭐️ |
+| **误推送提交** | `git push --force-with-lease` | ⭐️⭐️ |
+| **误合并/变基操作** | `git merge --abort` / `git rebase --abort` | ⭐️⭐️ |
+| **误删分支** | `git reflog` + `git checkout -b <branch> <commit-hash>` | ⭐️⭐️ |
 
 ---
-
-### **Git 分支命名规范（语义化分支）**
-| **类型**       | **格式**                     | **示例**                     | **适用场景**                                                                 |
-|----------------|-----------------------------|-----------------------------|-----------------------------------------------------------------------------|
-| **功能开发**   | `feat/<功能描述>`           | `feat/user-auth`            | 新功能开发（如登录模块、支付接口）                                           |
-| **问题修复**   | `fix/<问题描述>`            | `fix/login-error`           | 修复 Bug（如接口报错、样式问题）                                             |
-| **文档更新**   | `docs/<修改范围>`           | `docs/quick-start`          | 更新 README、API 文档、注释等                                                |
-| **代码重构**   | `refactor/<模块名>`         | `refactor/payment-service`  | 代码重构（不改变功能逻辑）                                                   |
-| **测试相关**   | `test/<测试目标>`           | `test/user-regression`      | 添加单元测试、E2E 测试                                                       |
-| **样式调整**   | `style/<修改范围>`          | `style/dark-mode`           | CSS/UI 样式调整（不涉及功能逻辑）                                            |
-| **依赖更新**   | `chore/<依赖名>`            | `chore/update-react`        | 升级依赖版本、修改构建配置（如 webpack、CI）                                  |
-| **性能优化**   | `perf/<优化目标>`           | `perf/api-response`         | 性能优化（如缓存数据库查询优化）                                       |
-| **实验性功能** | `experiment/<功能名>`       | `experiment/ai-chat`        | 临时性实验分支（可能不会合并到主分支）                                       |
-| **发布准备**   | `release/<版本号>`          | `release/v1.2.0`            | 发布前的最终测试和准备（禁止直接开发代码）                                    |
-| **紧急热修复** | `hotfix/<问题描述>`         | `hotfix/security-patch`     | 生产环境紧急修复（从 `main` 分支创建，修复后直接合并回 `main` 和 `develop`） |
-
----
-
-### **补充说明**
-1. ****：
-   • 使用 **小写字母** 和 `-` 连接单词（如 `user-auth` 而非 `userAuth`）。
-   • 避免使用特殊字符（如 `*`, `_`, `#`）。
-   • 保持名称简洁但明确（`fix/button-color` 优于 `fix/ui`）。
-
-2. **分支生命周期**：
-   • 功能分支合并后应删除（`git branch -d feat/xxx`）。
-   • 长期分支（如 `develop`、`release`）需团队协商维护。
-
-3. **协作场景**：
-   ```bash
-   # 创建分支并推送到远程
-   git checkout -b feat/user-profile
-   git push -u origin feat/user-profile  # -u 建立追踪关系
-   ```
-
-4. **与提交信息联动**：
-   • 分支名和提交信息（commit message）应保持一致：
-     ```bash
-     git commit -m "feat: add user profile page"
-     # 对应分支名：feat/user-profile
-     ```
-
----
-
-### **为什么需要规范？**
-• **清晰分类**：通过前缀快速识别分支用途。
-• **自动化支持**：CI/CD 工具可根据分支名触发不同流程（如 `feat/` 分支跑单元测试，`release/` 分支部署到生产环境）。
-• **历史追溯**：`git log --graph` 时可直观看到变更脉络。
-
-如果需要进一步扩展（如企业内部分支策略），可以结合 GitFlow 或 Trunk-Based Development 模型。

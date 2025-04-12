@@ -251,16 +251,16 @@ pipreqs ./ -i venv,tests        # 简写形式
 
 2. 项目初始化与管理
 
-    ```bash
-    # 1. 克隆仓库
-    git clone git@github.com:121624wzzzzz/teacher-rag.git
-    cd teacher-rag
+   ```bash
+   # 1. 克隆仓库
+   git clone git@github.com:121624wzzzzz/teacher-rag.git
+   cd teacher-rag
 
     # 2. LFS大文件管理
     git lfs install
     git lfs track "*.bin" "*.h5" "data/**" "models/*.pt"
     git add .gitattributes && git commit -m "chore: 配置LFS规则"
-    ```
+   ```
 
 3. 分支策略与开发流程
 
