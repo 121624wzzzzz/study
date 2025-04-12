@@ -1,7 +1,7 @@
 <!-- markdownlint-disable MD033 -->
 # 学习
 
-## Markdown 语法指南
+## ***Markdown*** 语法指南
 
 ### 标题分级
 
@@ -37,7 +37,7 @@
 *斜体*  
 **粗体**  
 ***粗斜体***  
-~~删除线~~  
+~~删除线~~
 `行内代码`
 ```
 
@@ -52,6 +52,8 @@
 
 1. 第一项
    1. 子项（缩进3空格）
+
+两者区别在于缩进
 
 ---
 
@@ -69,7 +71,7 @@
 ![图片描述](图片URL)
 ```
 <!-- 1. 直接显示URL -->
-<https://github.com>  
+`<https://github.com>`  
 → 效果： <https://github.com>
 
 <!-- 2. 引用式链接（长链接优化） -->
@@ -105,11 +107,12 @@ print("Hello")
 
 ### 引用
 
-```markdown
-> 引用内容
->> 嵌套引用
-```
-
+> 爱因斯坦理论：
+> E=mc² 是质能方程的经典表述。
+>> 霍金补充：
+>> 该方程在黑洞研究中需考虑量子效应。
+>>> 现代物理学家质疑：
+>>> 但在量子引力领域可能存在修正。
 ---
 
 ### 代码块缩进
@@ -203,12 +206,13 @@ pip install -r requirements.txt#  # 安装依赖包
 
 ### python外部库
 
-#### ***pipreqs***
+#### 依赖管理工具***pipreqs***
 
 ```bash
 # 安装 pipreqs
 pip install pipreqs  # 在项目根目录下生成 requirements.txt
-pipreqs ./ # 强制覆盖现有的 requirements.txt 文件
+pipreqs ./
+ # 强制覆盖现有的 requirements.txt 文件
 pipreqs ./ --force
 # 忽略某些目录（例如 venv 和 tests）
 pipreqs ./ --ignore=venv,tests
