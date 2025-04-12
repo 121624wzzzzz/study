@@ -228,162 +228,174 @@ pipreqs ./ -i venv,tests        # 简写形式
 
 ### Git使用
 
-#### 一、系统配置与初始化
+1. 系统配置与初始化
 
-```bash
-# 1. 安装Git和LFS
-sudo apt-get update && sudo apt-get install -y git git-lfs
-# 2. 全局配置（首次使用）
-git config --global user.name "121624wzzzzz"
-git config --global user.email "1216249110@qq.com"
-git config --global core.editor "code --wait"
-# 设置局部用户名/邮箱（覆盖全局配置）
-cd /path/to/your/project
-git config user.name "project-specific-name"
-git config user.email "project@example.com"
-# 3. SSH密钥配置
-ssh-keygen -t rsa -b 4096 -C "1216249110@qq.com"
-eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa
-cat ~/.ssh/id_rsa.pub | xclip -sel clip  # 复制公钥
-# 替换为您的仓库地址
-git clone git@github.com:username/repository.git
-```
+    ```bash
+    # 1. 安装Git和LFS
+    sudo apt-get update && sudo apt-get install -y git git-lfs
+    # 2. 全局配置（首次使用）
+    git config --global user.name "121624wzzzzz"
+    git config --global user.email "1216249110@qq.com"
+    git config --global core.editor "code --wait"
+    # 设置局部用户名/邮箱（覆盖全局配置）
+    cd /path/to/your/project
+    git config user.name "project-specific-name"
+    git config user.email "project@example.com"
+    # 3. SSH密钥配置
+    ssh-keygen -t rsa -b 4096 -C "1216249110@qq.com"
+    eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa
+    cat ~/.ssh/id_rsa.pub | xclip -sel clip  # 复制公钥
+    # 替换为您的仓库地址
+    git clone git@github.com:username/repository.git
+    ```
 
-#### 二、项目初始化与管理
+2. 项目初始化与管理
 
-```bash
-# 1. 克隆仓库
-git clone git@github.com:121624wzzzzz/teacher-rag.git
-cd teacher-rag
+    ```bash
+    # 1. 克隆仓库
+    git clone git@github.com:121624wzzzzz/teacher-rag.git
+    cd teacher-rag
 
-# 2. LFS大文件管理
-git lfs install
-git lfs track "*.bin" "*.h5" "data/**" "models/*.pt"
-git add .gitattributes && git commit -m "chore: 配置LFS规则"
-```
+    # 2. LFS大文件管理
+    git lfs install
+    git lfs track "*.bin" "*.h5" "data/**" "models/*.pt"
+    git add .gitattributes && git commit -m "chore: 配置LFS规则"
+    ```
 
-#### 三、分支策略与开发流程
+3. 分支策略与开发流程
 
-##### 分支命名规范
-
-| 类型   | 格式                 | 示例                |
-|--------|----------------------|---------------------|
-| 功能   | `feat/<功能描述>`    | `feat/user-login`   |
-| 修复   | `fix/<问题描述>`     | `fix/db-connection` |
-| 文档   | `docs/<修改范围>`    | `docs/api-ref`      |
+    | **类型**       | **格式**                     | **示例**                     | **适用场景**                                                                 |
+    |----------------|-----------------------------|-----------------------------|-----------------------------------------------------------------------------|
+    | **功能开发**   | `feat/<功能描述>`           | `feat/user-auth`            | 新功能开发（如登录模块、支付接口）                                           |
+    | **问题修复**   | `fix/<问题描述>`            | `fix/login-error`           | 修复 Bug（如接口报错、样式问题）                                             |
+    | **文档更新**   | `docs/<修改范围>`           | `docs/quick-start`          | 更新 README、API 文档、注释等                                                |
+    | **代码重构**   | `refactor/<模块名>`         | `refactor/payment-service`  | 代码重构（不改变功能逻辑）                                                   |
+    | **测试相关**   | `test/<测试目标>`           | `test/user-regression`      | 添加单元测试、E2E 测试                                                       |
+    | **样式调整**   | `style/<修改范围>`          | `style/dark-mode`           | CSS/UI 样式调整（不涉及功能逻辑）                                            |
+    | **依赖更新**   | `chore/<依赖名>`            | `chore/update-react`        | 升级依赖版本、修改构建配置（如 webpack、CI）                                  |
+    | **性能优化**   | `perf/<优化目标>`           | `perf/api-response`         | 性能优化（如缓存数据库查询优化）                                       |
+    | **实验性功能** | `experiment/<功能名>`       | `experiment/ai-chat`        | 临时性实验分支（可能不会合并到主分支）                                       |
+    | **发布准备**   | `release/<版本号>`          | `release/v1.2.0`            | 发布前的最终测试和准备（禁止直接开发代码）                                    |
+    | **紧急热修复** | `hotfix/<问题描述>`         | `hotfix/security-patch`     | 生产环境紧急修复（从 `main` 分支创建，修复后直接合并回 `main` 和 `develop`） |
 
 #### 标准操作流程
 
 ```bash
-# 1. 创建功能分支
-git checkout -b feat/user-login
-#​​checkout​​：切换分支或恢复工作树文件  ​-b 参数​​：表示创建新分支（--branch 的缩写）  
-#​feat/user-login​​：新分支的名称
-#斜杠会让分支在工具（如 GitHub/GitLab）中显示为 ​​文件夹层级​​，方便管理：
-# 2. 开发提交（推荐交互式添加）
-git add -p src/auth/login.py
-git commit -m "feat(auth): 实现JWT登录功能"
-
-# 3. 推送分支
-git push -u origin feat/user-login
-
-# 4. Rebase合并（保持历史整洁）
+# 1. 基于最新main创建功能分支
 git checkout main && git pull
-git checkout feat/user-login && git rebase main
-git checkout main && git merge --no-ff feat/user-login
+git checkout -b feat/payment
+
+# 2. 开发并提交
+git add -p src/payment.js  # 选择性暂存
+git commit -m "feat(payment): 增加支付宝支付"
+
+# 3. 推送到远程
+git push -u origin feat/payment
+
+# 4. 代码审查后合并到main
+git checkout main
+git pull --rebase
+git merge --no-ff feat/payment
+git push origin main
+
+# 5. 清理分支
+git branch -d feat/payment
+git push origin --delete feat/payment
 ```
 
 #### 四、Git 全流程开发指南（优化版）
 
-```bash
-# ====================== 系统初始化 ======================
-# 1. 安装Git和LFS（Linux）
-sudo apt-get update && sudo apt-get install -y git git-lfs
+1. 系统初始化
+  
+  ```bash
+  # ====================== 系统初始化 
+  # 1. 安装Git和LFS（Linux）
+  sudo apt-get update && sudo apt-get install -y git git-lfs
 
-# 2. 全局配置（首次使用必做）
-git config --global user.name "YourName"
-git config --global user.email "your@email.com"
-git config --global core.editor "code --wait"
-git config --global pull.rebase true  # 设置pull时自动rebase
+  # 2. 全局配置（首次使用必做）
+  git config --global user.name "YourName"
+  git config --global user.email "your@email.com"
+  git config --global core.editor "code --wait"
+  git config --global pull.rebase true  # 设置pull时自动rebase
 
-# 3. SSH密钥配置（免密推送）
-ssh-keygen -t rsa -b 4096 -C "your@email.com"
-ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519
-eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa #&&如果前一条命令成功（返回 0）
-#则执行下一条/默认私钥（id_rsa）添加到 SSH 代理，后续无需重复输入密码
-cat ~/.ssh/id_rsa.pub | clip  # Windows复制公钥,|管道接受前一条输出，clip复制
-# 将公钥添加到GitHub/GitLab的SSH Keys设置中
+  # 3. SSH密钥配置（免密推送）
+  ssh-keygen -t rsa -b 4096 -C "your@email.com"
+  ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519
+  eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa #&&如果前一条命令成功（返回 0）
+  #则执行下一条/默认私钥（id_rsa）添加到 SSH 代理，后续无需重复输入密码
+  cat ~/.ssh/id_rsa.pub | clip  # Windows复制公钥,|管道接受前一条输出，clip复制
+  # 将公钥添加到GitHub/GitLab的SSH Keys设置中
 
-# ====================== 项目初始化 ======================
-# 1. 克隆仓库（两种方式）
-git clone https://github.com/user/repo.git  # HTTPS方式
-git clone git@github.com:user/repo.git     # SSH方式（推荐）
+  # ====================== 项目初始化 ======================
+  # 1. 克隆仓库（两种方式）
+  git clone https://github.com/user/repo.git  # HTTPS方式
+  git clone git@github.com:user/repo.git     # SSH方式（推荐）
 
-# 2. 初始化新项目（如果是全新项目）
-mkdir project && cd project
-git init
-git remote add origin git@github.com:user/repo.git
+  # 2. 初始化新项目（如果是全新项目）
+  mkdir project && cd project
+  git init
+  git remote add origin git@github.com:user/repo.git
 
-# 3. 大文件管理（超过100MB的文件）
-git lfs install
-git lfs track "*.psd" "*.zip" "data/​**​"
-git add .gitattributes && git commit -m "chore: 配置LFS规则"
-
-
-# ====================== 分支管理 ======================
-# 1. 创建功能分支（带分类文件夹）
-git checkout -b feat/a  # 功能开发
-git checkout -b fix/login-error # Bug修复
-git checkout -b docs/api-update # 文档更新
-git push -u origin feat/a
-# 2. 查看分支信息
-git branch -avv  # 查看本地+远程分支及关联关系
-git log --oneline --graph --all  # 图形化查看提交历史
-
-# 3. 分支同步与清理
-git fetch --all -p  # 获取所有远程分支并清理已删除的
-git branch -d old-branch  # 删除已合并的分支
-git branch -D force-delete  # 强制删除未合并分支
-git push origin --delete remote-branch  # 删除远程分支
+  # 3. 大文件管理（超过100MB的文件）
+  git lfs install
+  git lfs track "*.psd" "*.zip" "data/​**​"
+  git add .gitattributes && git commit -m "chore: 配置LFS规则"
 
 
-# ====================== 日常开发流程 ======================
-# 1. 开发前同步（重要！）
-git checkout main
-git pull --rebase  # 使用rebase保持历史线性
+  # ====================== 分支管理 ======================
+  # 1. 创建功能分支（带分类文件夹）
+  git checkout -b feat/a  # 功能开发
+  git checkout -b fix/login-error # Bug修复
+  git checkout -b docs/api-update # 文档更新
+  git push -u origin feat/a
+  # 2. 查看分支信息
+  git branch -avv  # 查看本地+远程分支及关联关系
+  git log --oneline --graph --all  # 图形化查看提交历史
 
-# 2. 提交代码（推荐交互式）
-git add -p  # 选择性暂存修改
-git commit -m "描述"  # 语义化提交
-
-# 3. 解决冲突（当pull/push时报错时）
-git mergetool  # 使用配置的比对工具解决
-git rebase --continue  # 解决后继续rebase
-
-# 4. 代码推送（首次需要-u参数）
-git push -u origin feat/user-auth  # 首次推送
-git push  # 后续推送（已建立关联）
-
-
-# ====================== 合并与发布 ======================
-# 1. 合并到主分支（推荐rebase方式）
-git checkout main
-git pull --rebase
-git checkout feat/user-auth
-git rebase main  # 变基到main最新提交
-git checkout main
-git merge --no-ff feat/user-auth  # 显式生成合并节点
-
-# 2. 打标签发布
-git tag -a v1.2.0 -m "Release version 1.2.0"
-git push origin --tags
+  # 3. 分支同步与清理
+  git fetch --all -p  # 获取所有远程分支并清理已删除的
+  git branch -d old-branch  # 删除已合并的分支
+  git branch -D force-delete  # 强制删除未合并分支
+  git push origin --delete remote-branch  # 删除远程分支
 
 
-# ====================== 实用技巧 ======================
-# 1. 临时保存修改（当需要切换分支时）
-git stash save "WIP: 登录功能开发中"
-git stash pop  # 恢复最近暂存
-```
+  # ====================== 日常开发流程 ======================
+  # 1. 开发前同步（重要！）
+  git checkout main
+  git pull --rebase  # 使用rebase保持历史线性
+
+  # 2. 提交代码（推荐交互式）
+  git add -p  # 选择性暂存修改
+  git commit -m "描述"  # 语义化提交
+
+  # 3. 解决冲突（当pull/push时报错时）
+  git mergetool  # 使用配置的比对工具解决
+  git rebase --continue  # 解决后继续rebase
+
+  # 4. 代码推送（首次需要-u参数）
+  git push -u origin feat/user-auth  # 首次推送
+  git push  # 后续推送（已建立关联）
+
+
+  # ====================== 合并与发布 ======================
+  # 1. 合并到主分支（推荐rebase方式）
+  git checkout main
+  git pull --rebase
+  git checkout feat/user-auth
+  git rebase main  # 变基到main最新提交
+  git checkout main
+  git merge --no-ff feat/user-auth  # 显式生成合并节点
+
+  # 2. 打标签发布
+  git tag -a v1.2.0 -m "Release version 1.2.0"
+  git push origin --tags
+
+
+  # ====================== 实用技巧 ======================
+  # 1. 临时保存修改（当需要切换分支时）
+  git stash save "WIP: 登录功能开发中"
+  git stash pop  # 恢复最近暂存
+  ```
 
 ##### 配置***gitgnore***文件
 
