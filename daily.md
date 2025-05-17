@@ -172,8 +172,7 @@ def hello():
 
 ```bash
 conda create --name myenv
-conda create -n myenv python=3.8
-conda create -n wz1 python=3.10
+conda create -n find python=3.10
 # 这将创建一个名为 `myenv` 的环境，并安装 Python 3.10。
 #-n 和 --name 是 Conda 中定义环境名称的参数，功能完全相同**。
 conda activate myenv
@@ -238,7 +237,7 @@ pipreqs ./ -i venv,tests        # 简写形式
     git config user.name "project-specific-name"
     git config user.email "project@example.com"
     # 3. SSH密钥配置
-    ssh-keygen -t rsa -b 4096 -C "1216249110@qq.com"
+    ssh-keygen -t rsa -b 4096 -C "1216249110@qq.com" #生成密钥
     eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa
     cat ~/.ssh/id_rsa.pub | xclip -sel clip  # 复制公钥
     # 替换为您的仓库地址
@@ -301,97 +300,96 @@ git push origin --delete feat/payment
 
 #### 四、Git 全流程开发指南（优化版）
 
-1. 系统初始化
-  
-  ```bash
-  # ====================== 系统初始化 
-  # 1. 安装Git和LFS（Linux）
-  sudo apt-get update && sudo apt-get install -y git git-lfs
+```bash
+# ====================== 系统初始化 
+# 1. 安装Git和LFS（Linux）
+sudo apt-get update && sudo apt-get install -y git git-lfs
 
-  # 2. 全局配置（首次使用必做）
-  git config --global user.name "YourName"
-  git config --global user.email "your@email.com"
-  git config --global core.editor "code --wait"
-  git config --global pull.rebase true  # 设置pull时自动rebase
+# 2. 全局配置（首次使用必做）
+git config --global user.name "YourName"
+git config --global user.email "your@email.com"
+git config --global core.editor "code --wait"
+git config --local user.email "project@email.com" # 设置局部用户名/邮箱（覆盖全局配置）
+git config --global pull.rebase true  # 设置pull时自动rebase
 
-  # 3. SSH密钥配置（免密推送）
-  ssh-keygen -t rsa -b 4096 -C "your@email.com"
-  ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519
-  eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa #&&如果前一条命令成功（返回 0）
-  #则执行下一条/默认私钥（id_rsa）添加到 SSH 代理，后续无需重复输入密码
-  cat ~/.ssh/id_rsa.pub | clip  # Windows复制公钥,|管道接受前一条输出，clip复制
-  # 将公钥添加到GitHub/GitLab的SSH Keys设置中
+# 3. SSH密钥配置（免密推送）
+ssh-keygen -t rsa -b 4096 -C "your@email.com"
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519
+eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa #&&如果前一条命令成功（返回 0）
+# 则执行下一条/默认私钥（id_rsa）添加到 SSH 代理，后续无需重复输入密码
+cat ~/.ssh/id_rsa.pub | clip  # Windows复制公钥,|管道接受前一条输出，clip复制
+# 接下来。将公钥添加到GitHub/GitLab的SSH Keys设置中
 
-  # ====================== 项目初始化 ======================
-  # 1. 克隆仓库（两种方式）
-  git clone https://github.com/user/repo.git  # HTTPS方式
-  git clone git@github.com:user/repo.git     # SSH方式（推荐）
+# ====================== 项目初始化 ======================
+# 1. 克隆仓库（两种方式）
+git clone https://github.com/user/repo.git  # HTTPS方式
+git clone git@github.com:user/repo.git     # SSH方式（推荐）
 
-  # 2. 初始化新项目（如果是全新项目）
-  mkdir project && cd project
-  git init
-  git remote add origin git@github.com:user/repo.git
+# 2. 初始化新项目（如果是全新项目）
+mkdir project && cd project
+git init
+git remote add origin git@github.com:user/repo.git
 
-  # 3. 大文件管理（超过100MB的文件）
-  git lfs install
-  git lfs track "*.psd" "*.zip" "data/​**​"
-  git add .gitattributes && git commit -m "chore: 配置LFS规则"
-
-
-  # ====================== 分支管理 ======================
-  # 1. 创建功能分支（带分类文件夹）
-  git checkout -b feat/a  # 功能开发
-  git checkout -b fix/login-error # Bug修复
-  git checkout -b docs/api-update # 文档更新
-  git push -u origin feat/a
-  # 2. 查看分支信息
-  git branch -avv  # 查看本地+远程分支及关联关系
-  git log --oneline --graph --all  # 图形化查看提交历史
-
-  # 3. 分支同步与清理
-  git fetch --all -p  # 获取所有远程分支并清理已删除的
-  git branch -d old-branch  # 删除已合并的分支
-  git branch -D force-delete  # 强制删除未合并分支
-  git push origin --delete remote-branch  # 删除远程分支
+# 3. 大文件管理（超过100MB的文件）
+git lfs install
+git lfs track "*.psd" "*.zip" "data/​**​"
+git add .gitattributes && git commit -m "chore: 配置LFS规则"
 
 
-  # ====================== 日常开发流程 ======================
-  # 1. 开发前同步（重要！）
-  git checkout main
-  git pull --rebase  # 使用rebase保持历史线性
+# ====================== 分支管理 ======================
+# 1. 创建功能分支（带分类文件夹）
+git checkout -b feat/a  # 功能开发 b是分支名
+git checkout -b fix/login-error # Bug修复
+git checkout -b docs/api-update # 文档更新
+git push -u origin feat/a
+# 2. 查看分支信息
+git branch -avv  # 查看本地+远程分支及关联关系
+git log --oneline --graph --all  # 图形化查看提交历史
 
-  # 2. 提交代码（推荐交互式）
-  git add -p  # 选择性暂存修改
-  git commit -m "描述"  # 语义化提交
-
-  # 3. 解决冲突（当pull/push时报错时）
-  git mergetool  # 使用配置的比对工具解决
-  git rebase --continue  # 解决后继续rebase
-
-  # 4. 代码推送（首次需要-u参数）
-  git push -u origin feat/user-auth  # 首次推送
-  git push  # 后续推送（已建立关联）
-
-
-  # ====================== 合并与发布 ======================
-  # 1. 合并到主分支（推荐rebase方式）
-  git checkout main
-  git pull --rebase
-  git checkout feat/user-auth
-  git rebase main  # 变基到main最新提交
-  git checkout main
-  git merge --no-ff feat/user-auth  # 显式生成合并节点
-
-  # 2. 打标签发布
-  git tag -a v1.2.0 -m "Release version 1.2.0"
-  git push origin --tags
+# 3. 分支同步与清理
+git fetch --all -p  # 获取所有远程分支并清理已删除的
+git branch -d old-branch  # 删除已合并的分支
+git branch -D force-delete  # 强制删除未合并分支
+git push origin --delete remote-branch  # 删除远程分支
 
 
-  # ====================== 实用技巧 ======================
-  # 1. 临时保存修改（当需要切换分支时）
-  git stash save "WIP: 登录功能开发中"
-  git stash pop  # 恢复最近暂存
-  ```
+# ====================== 日常开发流程 ======================
+# 1. 开发前同步（重要！）
+git checkout main
+git pull --rebase  # 使用rebase保持历史线性
+
+# 2. 提交代码（推荐交互式）
+git add -p  # 选择性暂存修改
+git commit -m "描述"  # 语义化提交
+
+# 3. 解决冲突（当pull/push时报错时）
+git mergetool  # 使用配置的比对工具解决
+git rebase --continue  # 解决后继续rebase
+
+# 4. 代码推送（首次需要-u参数）
+git push -u origin feat/user-auth  # 首次推送
+git push  # 后续推送（已建立关联）
+
+
+# ====================== 合并与发布 ======================
+# 1. 合并到主分支（推荐rebase方式）
+git checkout main
+git pull --rebase
+git checkout feat/user-auth
+git rebase main  # 变基到main最新提交
+git checkout main
+git merge --no-ff feat/user-auth  # 显式生成合并节点
+
+# 2. 打标签发布
+git tag -a v1.2.0 -m "Release version 1.2.0"
+git push origin --tags
+
+
+# ====================== 实用技巧 ======================
+# 1. 临时保存修改（当需要切换分支时）
+git stash save "WIP: 登录功能开发中"
+git stash pop  # 恢复最近暂存
+```
 
 [Git 核心指令分类](./temp.md)
 
