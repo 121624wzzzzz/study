@@ -174,7 +174,7 @@ def hello():
 conda create --name myenv
 conda create -n find python=3.10
 # 这将创建一个名为 `myenv` 的环境，并安装 Python 3.10。
-#-n 和 --name 是 Conda 中定义环境名称的参数，功能完全相同**。
+# -n 和 --name 是 Conda 中定义环境名称的参数。
 conda activate myenv
 # 激活名为 `myenv` 的环境。
 conda env list
@@ -192,14 +192,14 @@ conda env create -f environment.yml
 临时使用镜像源在安装包时，可以通过 -i 参数指定镜像源。例如：
 
 ```bash
-pip install package_name -i https://pypi.tuna.tsinghua.edu.cn/simple # 临时使用清华源
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple # 设置全局镜像源
+pip install package_name -i https://pypi.tuna.tsinghua.edu.cn/simple # 临时使用清华源
 pip config list  # 查看配置
 pip config unset global.index-url  # 删除配置
 pip install -r requirements.txt#  # 安装依赖包
 ```
 
-### python外部库
+### python外部库(个人使用)
 
 #### 依赖管理工具***pipreqs***
 
@@ -234,8 +234,8 @@ pipreqs ./ -i venv,tests        # 简写形式
     git config --global core.editor "code --wait"
     # 设置局部用户名/邮箱（覆盖全局配置）
     cd /path/to/your/project
-    git config user.name "project-specific-name"
-    git config user.email "project@example.com"
+    git config user.name "121624wzzzzz"
+    git config user.email "1216249110@qq.com"
     # 3. SSH密钥配置
     ssh-keygen -t rsa -b 4096 -C "1216249110@qq.com" #生成密钥
     eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa
@@ -306,14 +306,14 @@ git push origin --delete feat/payment
 sudo apt-get update && sudo apt-get install -y git git-lfs
 
 # 2. 全局配置（首次使用必做）
-git config --global user.name "YourName"
-git config --global user.email "your@email.com"
+git config --global user.name "121624wzzzzz"
+git config --global user.email "1216249110@qq.com"
 git config --global core.editor "code --wait"
-git config --local user.email "project@email.com" # 设置局部用户名/邮箱（覆盖全局配置）
+git config --local user.email "1216249110@qq.com" # 设置局部用户名/邮箱（覆盖全局配置）
 git config --global pull.rebase true  # 设置pull时自动rebase
 
 # 3. SSH密钥配置（免密推送）
-ssh-keygen -t rsa -b 4096 -C "your@email.com"
+ssh-keygen -t rsa -b 4096 -C "1216249110@qq.com"
 ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519
 eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_rsa #&&如果前一条命令成功（返回 0）
 # 则执行下一条/默认私钥（id_rsa）添加到 SSH 代理，后续无需重复输入密码
@@ -328,8 +328,7 @@ git clone git@github.com:user/repo.git     # SSH方式（推荐）
 # 2. 初始化新项目（如果是全新项目）
 mkdir project && cd project
 git init
-git remote add origin git@github.com:user/repo.git
-
+git remote add origin git@github.com:user/repo.git #新加一个关联
 # 3. 大文件管理（超过100MB的文件）
 git lfs install
 git lfs track "*.psd" "*.zip" "data/​**​"
@@ -506,6 +505,41 @@ cp -r dir /backup/         # 递归复制目录
 mv file.txt newname.txt    # 重命名
 mv file.txt /target/       # 移动文件
 ```
+
+#### 6. tmux常用命令
+
+以下是 **tmux**（终端复用工具）的常见指令列表，以 Markdown 表格形式整理，方便查阅：
+
+是**Tmux 常用指令表**
+
+| 类别               | 指令/快捷键                     | 说明                                                                 |
+|--------------------|--------------------------------|---------------------------------------------------------------------|
+| **会话管理**        |                                |                                                                     |
+|                    | `tmux new -s <会话名>`          | 创建新会话并命名（如 `tmux new -s dev`）                             |
+|                    | `tmux attach -t <会话名>`       | 重新接入已存在的会话（如 `tmux attach -t dev`）                      |
+|                    | `tmux ls`                      | 列出所有会话                                                        |
+|                    | `tmux kill-session -t <会话名>` | 关闭指定会话                                                        |
+|                    | `tmux kill-server`             | 关闭所有会话和 tmux 服务                                            |
+| **窗口操作**        |                                |                                                                     |
+|                    | `Ctrl+b c`                    | 创建新窗口                                                          |
+|                    | `Ctrl+b &`                    | 关闭当前窗口（需确认）                                              |
+|                    | `Ctrl+b p`                    | 切换到上一个窗口                                                    |
+|                    | `Ctrl+b n`                    | 切换到下一个窗口                                                    |
+|                    | `Ctrl+b <数字>`                | 快速跳转到指定编号的窗口（如 `Ctrl+b 1` 到窗口 1）                   |
+|                    | `Ctrl+b ,`                    | 重命名当前窗口                                                      |
+| **面板（Pane）操作** |                                |                                                                     |
+|                    | `Ctrl+b %`                    | 垂直分割面板（左右分屏）                                            |
+|                    | `Ctrl+b "`                    | 水平分割面板（上下分屏）                                            |
+|                    | `Ctrl+b <方向键>`              | 切换面板方向（如 `Ctrl+b →` 跳到右侧面板）                           |
+|                    | `Ctrl+b z`                    | 最大化/恢复当前面板（全屏切换）                                     |
+|                    | `Ctrl+b x`                    | 关闭当前面板（需确认）                                              |
+|                    | `Ctrl+b Ctrl+<方向键>`         | 调整面板大小（按住 `Ctrl` 连续按方向键微调）                         |
+| **其他操作**        |                                |                                                                     |
+|                    | `Ctrl+b d`                    | 分离当前会话（后台运行，可用 `tmux attach` 重新接入）                |
+|                    | `Ctrl+b [`                    | 进入滚动模式（用方向键滚动，按 `q` 退出）                           |
+|                    | `Ctrl+b s`                    | 可视化选择并切换会话/窗口                                           |
+|                    | `Ctrl+b :`                    | 进入命令模式（输入高级命令，如 `setw synchronize-panes` 同步面板输入） |
+|                    | `Ctrl+b ?`                    | 查看所有快捷键帮助（按 `q` 退出）                                   |
 
 ---
 
