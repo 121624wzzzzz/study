@@ -507,6 +507,7 @@ tar -cjvf 压缩包名.tar.bz2 要压缩的目录/
 tar -tzvf 压缩包名.tar.gz
 unzip -l 压缩包名.zip
 
+
 # 解压到指定目录
 tar -xzvf 压缩包名.tar.gz -C 目标目录/
 unzip 压缩包名.zip -d 目标目录/
