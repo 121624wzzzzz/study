@@ -1,0 +1,21 @@
+{
+  // 在资源管理器中显示以 . 开头的文件和目录
+  "files.exclude": {
+    "**/.git": false,
+    "**/.gitignore": false,
+    "**/.vscode": false,
+    "**/node_modules": true
+  },
+
+  // 在资源管理器中也显示被 .gitignore 忽略的文件（根据需要开启/关闭）
+  "files.watcherExclude": {
+    "**/node_modules/**": true
+  },
+
+  // 如果希望同时在搜索中包含被忽略的文件
+  "search.useIgnoreFiles": false,
+  "search.useGlobalIgnoreFiles": false,
+
+  // 可选：在侧边栏设置折叠深度或其它显示行为（保留默认）
+  // "explorer.compactFolders": false
+}

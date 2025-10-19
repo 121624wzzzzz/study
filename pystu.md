@@ -34,7 +34,7 @@ conda env create -f environment.yml
 # 根据 `environment.yml` 文件创建环境。
 ```
 
-### python外部库(个人使用)
+### python外部工具(个人使用)
 
 #### 依赖管理工具***pipreqs***
 
@@ -110,10 +110,8 @@ pipreqs ./ -i venv,tests        # 简写形式
 
 #### 标准操作流程
 
-```bash
+``` bash
 # 1. 基于最新main创建功能分支
-
-
 
 git checkout -b feat/payment
 
@@ -175,8 +173,6 @@ git add .gitattributes && git commit -m "chore: 配置LFS规则"
 # ====================== 分支管理 ======================
 # 1. 创建功能分支（带分类文件夹）
 git checkout -b feat/a  # 功能开发 b是分支名
-git checkout -b fix/login-error # Bug修复
-git checkout -b docs/api-update # 文档更新
 git push -u origin feat/a
 # 2. 查看分支信息
 git branch -avv  # 查看本地+远程分支及关联关系
@@ -195,7 +191,7 @@ git checkout main
 git pull --rebase  # 使用rebase保持历史线性
 
 # 2. 提交代码（推荐交互式）
-git add -p  # 选择性暂存修改
+git add -p . # 选择性暂存修改
 git commit -m "描述"  # 语义化提交
 
 # 3. 解决冲突（当pull/push时报错时）
